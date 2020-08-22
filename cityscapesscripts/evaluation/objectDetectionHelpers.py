@@ -1,10 +1,9 @@
-#!/usr/bin/python3
+#!/usr/bin/python
 #
 # helper functions for 3D object detection evaluation
 #
 
 import os
-import fnmatch
 import numpy as np
 
 from typing import List

@@ -231,7 +231,7 @@ class CsBbox2d(CsObject):
         objDict['instanceId'] = self.instanceId
         objDict['modal'] = self.bbox_modal_xywh
         objDict['amodal'] = self.bbox_amodal_xywh
-        # keey bbox and bboxVis for legacy
+        # keep bbox and bboxVis for legacy
         objDict['bbox'] = self.bbox_amodal_xywh
         objDict['bboxVis'] = self.bbox_amodal_xywh
 
@@ -291,7 +291,7 @@ class CsBbox3d(CsObject):
         objDict['label'] = self.label
         objDict['instanceId'] = self.instanceId
         objDict['2d']['amodal'] = self.bbox_2d.bbox_amodal
-        objDict['2d']['modal'] = self.bbox_2d.box_2d_modal
+        objDict['2d']['modal'] = self.bbox_2d.box_modal
         objDict['3d']['center'] = self.center
         objDict['3d']['dimensions'] = self.dims
         objDict['3d']['rotation'] = self.rotation
@@ -327,7 +327,7 @@ class CsIgnore2d(CsObject):
         bbox2dText += 'Ignore Region:  (x1: {}, y1: {}), (w: {}, h: {})'.format(
             self.box_2d_xywh[0], self.box_2d_xywh[1], self.box_2d_xywh[2], self.box_2d_xywh[3])
 
-        return text
+        return bbox2dText
 
     def fromJsonText(self, jsonText, objId=-1):
         self.box_2d_xywh = jsonText['2d']
