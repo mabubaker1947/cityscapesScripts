@@ -22,7 +22,6 @@ from tqdm import tqdm
 # keep compatibility for python2
 from collections import OrderedDict
 
-from cityscapesscripts.helpers.labels import labels
 from cityscapesscripts.helpers.annotation import (
     CsBbox3d,
     CsIgnore2d
@@ -36,10 +35,6 @@ from cityscapesscripts.evaluation.objectDetectionHelpers import (
 from cityscapesscripts.evaluation.objectDetectionHelpers import (
     MATCHING_MODAL,
     MATCHING_AMODAL
-)
-from cityscapesscripts.evaluation.plot3dResults import (
-    prepare_data,
-    plot_data
 )
 
 logger = logging.getLogger('EvalObjectDetection3d')
@@ -105,7 +100,7 @@ class Box3dEvaluator:
         self,
         evaluation_params       # type: EvaluationParameters
     ):
-        # type: (...) -> None:
+        # type: (...) -> None
 
         self.eval_params = evaluation_params
 
@@ -146,7 +141,7 @@ class Box3dEvaluator:
         # type: (...) -> None
         """Checks chosen working confidence value."""
         if (
-            not self.eval_params.cw in self._conf_thresholds and
+            self.eval_params.cw not in self._conf_thresholds and
             self.eval_params.cw != -1.0
         ):
             old_cw = self.eval_params.cw
@@ -248,7 +243,7 @@ class Box3dEvaluator:
                     try:
                         box_data = CsBbox3d()
                         box_data.fromJsonText(d)
-                    except:
+                    except Exception:
                         logger.critical("Found incorrect annotation in {}.".format(p))
                         continue
 
@@ -1097,6 +1092,8 @@ def evaluate3dObjectDetection(
     boxEvaluator.saveResults(result_folder)
 
     if plot:
+        # lazy import as matplotlib does not run properly on all python version for all OSs
+        from cityscapesscripts.evaluation.plot3dResults import plot_data
         plot_data(boxEvaluator.results)
 
     return

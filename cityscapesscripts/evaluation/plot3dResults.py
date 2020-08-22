@@ -184,7 +184,7 @@ def create_AP_plot(
         max_depth (int): maximal encountered depth value
     """
 
-    if not "AP_per_depth" in data_to_plot:
+    if "AP_per_depth" not in data_to_plot:
         raise ValueError()
 
     axis.set_title("AP per depth")
