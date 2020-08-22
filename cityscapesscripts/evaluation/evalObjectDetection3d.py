@@ -104,7 +104,7 @@ class Box3dEvaluator:
     def __init__(
         self,
         evaluation_params       # type: EvaluationParameters
-        ):
+    ):
         # type: (...) -> None:
 
         self.eval_params = evaluation_params
@@ -121,7 +121,7 @@ class Box3dEvaluator:
         # dict containing all required results
         self.results = OrderedDict()
 
-        # internal dict keeping addtional statistics
+        # internal dict keeping additional statistics
         self._stats = OrderedDict()
 
         # the actual confidence thresholds
@@ -134,7 +134,7 @@ class Box3dEvaluator:
 
     def reset(self):
         # type: (...) -> None
-        """Resets state of this instance to a newly initialised one."""
+        """Resets state of this instance to a newly initialized one."""
 
         self.gts = {}
         self.preds = {}
@@ -167,7 +167,7 @@ class Box3dEvaluator:
     def loadGT(
         self,
         gt_folder   # type: str
-        ):
+    ):
         # type: (...) -> None
         """Loads ground truth from the given folder.
 
@@ -215,7 +215,7 @@ class Box3dEvaluator:
     def loadPredictions(
         self,
         pred_folder   # type: str
-        ):
+    ):
         # type: (...) -> None
         """Loads all predictions from the given folder.
 
@@ -289,7 +289,7 @@ class Box3dEvaluator:
     def saveResults(
         self,
         result_folder   # type: str
-        ):
+    ):
         # type: (...) -> str
         """Saves the evaluation results to ``"results.json"``
 
@@ -330,7 +330,7 @@ class Box3dEvaluator:
     def _worker(
         self,
         base    # type: str
-        ):
+    ):
         # type: (...) -> dict
         """Internal method to run evaluation for a single image."""
         tmp_stats = {}
@@ -358,10 +358,10 @@ class Box3dEvaluator:
 
     def _addImageEvaluation(
         self,
-        gt_boxes,   # type: List[CsBbox3d]
-        pred_boxes, # type: List[CsBbox3d]
-        min_score   # type: float
-        ):
+        gt_boxes,    # type: List[CsBbox3d]
+        pred_boxes,  # type: List[CsBbox3d]
+        min_score    # type: float
+    ):
         # type: (...) -> Tuple[dict, dict, dict, dict]
         """Internal method to evaluate a single image.
 
@@ -474,7 +474,7 @@ class Box3dEvaluator:
     def _getMatches(
         self,
         iou_matrix  # type: np.ndarray
-        ):
+    ):
         # type: (...) -> Tuple[List[int], List[int], List[int]]
         """Internal method that gets the TP matches between the predictions and the GT data.
 
@@ -483,7 +483,7 @@ class Box3dEvaluator:
 
         Returns:
             tuple(list[int],list[int],list[float]): A tuple containing the TP indices
-            for GT and predicions and the corresponding iou
+            for GT and predictions and the corresponding iou
         """
         matched_gts = []
         matched_preds = []
@@ -516,10 +516,10 @@ class Box3dEvaluator:
 
     def _calcCenterDistances(
         self,
-        label,      # type: str
-        gt_boxes,   # type: List[CsBbox3d]
-        pred_boxes, # type: List[CsBbox3d]
-        ):
+        label,       # type: str
+        gt_boxes,    # type: List[CsBbox3d]
+        pred_boxes,  # type: List[CsBbox3d]
+    ):
         # type: (...) -> np.ndarray
         """Internal method that calculates the BEV distance for a TP box
         d = sqrt(dx*dx + dz*dz)
@@ -561,11 +561,11 @@ class Box3dEvaluator:
 
     def _calcSizeSimilarities(
         self,
-        label,      # type: str
-        gt_boxes,   # type: List[CsBbox3d]
-        pred_boxes, # type: List[CsBbox3d]
-        gt_dists    # type: np.ndarray
-        ):
+        label,       # type: str
+        gt_boxes,    # type: List[CsBbox3d]
+        pred_boxes,  # type: List[CsBbox3d]
+        gt_dists     # type: np.ndarray
+    ):
         # type: (...) -> None
         """Internal method that calculates the size similarity for a TP box
         s = min(w/w', w'/w) * min(h/h', h'/h) * min(l/l', l'/l)
@@ -595,11 +595,11 @@ class Box3dEvaluator:
 
     def _calcOrientationSimilarities(
         self,
-        label,      # type: str
-        gt_boxes,   # type: List[CsBbox3d]
-        pred_boxes, # type: List[CsBbox3d]
-        gt_dists    # type: np.ndarray
-        ):
+        label,       # type: str
+        gt_boxes,    # type: List[CsBbox3d]
+        pred_boxes,  # type: List[CsBbox3d]
+        gt_dists     # type: np.ndarray
+    ):
         # type: (...) -> None
         """Internal method that calculates the orientation similarity for a TP box.
         os_yaw = (1 + cos(delta)) / 2.
@@ -637,7 +637,7 @@ class Box3dEvaluator:
     def _calculateAUC(
         self,
         label   # type: str
-        ):
+    ):
         # type: (...) -> None
         """Internal method that calculates the Area Under Curve (AUC)
         for the available DDTP metrics.
@@ -1057,8 +1057,8 @@ def evaluate3dObjectDetection(
     pred_folder,    # type: str
     result_folder,  # type: str
     eval_params,    # type: EvaluationParameters
-    plot = True     # type: bool
-    ):
+    plot=True       # type: bool
+):
     # type: (...) -> None
     """Performs the 3D object detection evaluation.
 
@@ -1101,8 +1101,9 @@ def evaluate3dObjectDetection(
 
     return
 
-# main method
+
 def main():
+    """main method"""
     logger.info("========================")
     logger.info("=== Start evaluation ===")
     logger.info("========================")
@@ -1186,6 +1187,7 @@ def main():
                         help="Use modal 2D boxes for matching")
 
     parser.add_argument("--noplot",
+                        dest="plot_results",
                         action="store_false",
                         help="Don't plot the graphical results")
 
@@ -1220,14 +1222,12 @@ def main():
         args.predictionFolder,
         args.resultsFolder,
         eval_params,
-        plot=args.noplot
+        plot=args.plot_results
     )
 
     logger.info("========================")
     logger.info("=== Stop evaluation ====")
     logger.info("========================")
-
-    return
 
 
 if __name__ == "__main__":

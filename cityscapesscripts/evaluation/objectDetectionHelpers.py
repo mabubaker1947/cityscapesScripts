@@ -28,14 +28,14 @@ class EvaluationParameters:
 
     def __init__(
         self,
-        labels_to_evaluate,                 # type: List[str]
-        min_iou_to_match = 0.7,             # type: float
-        max_depth = 100,                    # type: int
-        step_size = 5.,                     # type: float
-        matching_method = MATCHING_AMODAL,  # type: int
-        cw = -1.,                           # type: float
-        num_conf = 50                       # type: int
-        ):
+        labels_to_evaluate,               # type: List[str]
+        min_iou_to_match=0.7,             # type: float
+        max_depth=100,                    # type: int
+        step_size=5.,                     # type: float
+        matching_method=MATCHING_AMODAL,  # type: int
+        cw=-1.,                           # type: float
+        num_conf=50                       # type: int
+    ):
         # type: (...) -> None
 
         self._labels_to_evaluate = labels_to_evaluate
@@ -82,7 +82,7 @@ class EvaluationParameters:
 def calcIouMatrix(
     gts,        # type: np.ndarray,
     preds       # type: np.ndarray
-    ):
+):
     # type: (...) -> np.ndarray
     """Calculates the pairwise Intersection Over Union (IoU)
     matrix for a set of GTs and predictions.
@@ -114,7 +114,7 @@ def calcIouMatrix(
 def calcOverlapMatrix(
     gt_ignores,     # type: np.ndarray,
     preds           # type: np.ndarray
-    ):
+):
     # type: (...) -> np.ndarray
     """Calculates the overlap matrix for a set
     of GT ignore regions and predictions.
@@ -145,7 +145,7 @@ def calcOverlapMatrix(
 def getFiles(
     folder,         # type: str,
     suffix=".json"  # type: str
-        ):
+):
     # type: (...) -> List[str]
     """Recursively walks through the folder and finds
     returns all files that end with ``"suffix"``.

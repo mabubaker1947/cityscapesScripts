@@ -25,8 +25,8 @@ def create_table_row(
     data_dict,          # type: dict
     title,              # type: str
     key,                # type: str
-    subdict_key = None  # type: str
-    ):
+    subdict_key=None    # type: str
+):
     # type: (...) -> None
     """Creates a row presenting scores for all classes in category ``key`` in ``data_dict``.
 
@@ -63,7 +63,7 @@ def create_result_table_and_legend_plot(
     axis,           # type: Axes
     data_to_plot,   # type: dict
     handles_labels  # type: Tuple[List, List]
-    ):
+):
     # type: (...) -> None
     """Creates the plot-section containing a table with result scores and labels.
 
@@ -111,7 +111,7 @@ def create_spider_chart_plot(
     data_to_plot,   # type: dict
     categories,     # type: List[str]
     accept_classes  # type: List[str]
-    ):
+):
     # type: (...) -> None
     """Creates spider-chart with ``categories`` for all classes in ``accept_classes``.
 
@@ -168,11 +168,11 @@ def create_spider_chart_plot(
 
 
 def create_AP_plot(
-    axis,           # type: Axes
-    data_to_plot,   # type: dict
-    accept_classes, # type: List[str]
-    max_depth       # type: int
-    ):
+    axis,            # type: Axes
+    data_to_plot,    # type: dict
+    accept_classes,  # type: List[str]
+    max_depth        # type: int
+):
     # type: (...) -> None
     """Create the average precision (AP) subplot for classes in ``accept_classes``.
 
@@ -204,7 +204,7 @@ def set_up_xaxis(
     axis,       # type: Axes
     max_depth,  # type: int
     num_ticks   # type: int
-    ):
+):
     # type: (...) -> None
     """Sets up the x-Axis of given Axes-instance ``axis``.
 
@@ -219,10 +219,10 @@ def set_up_xaxis(
 
 
 def set_up_PR_plot_axis(
-    axis,           # type: Axes
-    min_iou,        # type: float
-    matching_method # type: str
-    ):
+    axis,            # type: Axes
+    min_iou,         # type: float
+    matching_method  # type: str
+):
     # type: (...) -> None
     """Sets up the axis for the precision plot."""
     axis.set_title("PR Curve@%.2f (%s)" % (min_iou, matching_method))
@@ -237,7 +237,7 @@ def set_up_PR_plot_axis(
 def create_all_axes(
     max_depth,  # type: int
     num_ticks   # type: int
-    ):
+):
     # type: (...) -> None
     """Creates all Axes-instances of the 8 subplots.
 
@@ -275,7 +275,7 @@ def create_PR_plot(
     axis,           # type: Axes
     data,           # type: dict
     accept_classes  # type: List[str]
-    ):
+):
     # type: (...) -> None
     """Fills precision-recall (PR) subplot with data and finalizes ``axis``-set-up.
 
@@ -320,7 +320,7 @@ def fill_and_finalize_subplot(
     accept_classes,     # type: List[str]
     axis,               # type: Axes
     max_depth           # type: int
-    ):
+):
     # type: (...) -> None
     """Plot data to subplots by selecting correct data for given ``category`` and looping over
     all classes in ``accept_classes``.
@@ -374,7 +374,7 @@ def fill_standard_subplot(
     label,                      # type: str
     available_items_scaling,    # type: List[float]
     max_depth                   # type: int
-    ):
+):
     # type: (...) -> None
     """Fills standard-subplots with data for ``label`` with data.
 
@@ -412,8 +412,8 @@ def fill_standard_subplot(
 
 def get_available_items_scaling(
     data,           # type: dict
-    scale_fac = 100 # type: float
-    ):
+    scale_fac=100   # type: float
+):
     # type: (...) -> None
     """Counts available items per data-point. Normalizes and scales according to ``scale_fac``."""
     available_items = list(data.values())
@@ -428,7 +428,7 @@ def get_available_items_scaling(
 
 def get_x_y_vals(
     data    # type: dict
-    ):
+):
     # type: (...) -> None
     """Reads and returns x- and y-values from dict."""
     x_vals = [float(x) for x in list(data.keys())]
@@ -438,7 +438,7 @@ def get_x_y_vals(
 
 def plot_data(
     data_to_plot    # type: dict
-    ):
+):
     # type: (...) -> None
     """Creates the visualization of the data in ``data_to_plot``.
 
@@ -487,7 +487,7 @@ def plot_data(
 
 def prepare_data(
     json_path   # type: str
-    ):
+):
     # type: (...) -> dict
     """Loads data from json-file.
 
