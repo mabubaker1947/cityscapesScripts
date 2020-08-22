@@ -369,8 +369,8 @@ def fill_and_finalize_subplot(
 
 def fill_standard_subplot(
     axis,                       # type: Axes
-    x_vals,                     # type: List[float]
-    y_vals,                     # type: List[float]
+    x_vals_unsorted,            # type: List[float]
+    y_vals_unsorted,            # type: List[float]
     label,                      # type: str
     available_items_scaling,    # type: List[float]
     max_depth                   # type: int
@@ -389,6 +389,14 @@ def fill_standard_subplot(
         available_items_scaling (list of float): size of data-points
         max_depth (int): maximal value of x-axis
     """
+
+    sorted_pairs = sorted(zip(x_vals_unsorted, y_vals_unsorted), key=lambda x: x[0])
+    if len(sorted_pairs) > 0:
+        x_vals, y_vals = map(list, zip(*sorted_pairs))
+    else:
+        x_vals = x_vals_unsorted
+        y_vals = y_vals_unsorted
+
     if len(available_items_scaling) > 0:
         axis.scatter(x_vals, y_vals, s=available_items_scaling,
                      color=csToMplColor(label), marker="o", alpha=1.0)

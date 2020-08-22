@@ -19,7 +19,8 @@ from typing import (
 
 from pyquaternion import Quaternion
 from tqdm import tqdm
-from copy import deepcopy
+# keep compatibility for python2
+from collections import OrderedDict
 
 from cityscapesscripts.helpers.labels import labels
 from cityscapesscripts.helpers.annotation import (
@@ -118,10 +119,10 @@ class Box3dEvaluator:
         self.ap = {}
 
         # dict containing all required results
-        self.results = {}
+        self.results = OrderedDict()
 
         # internal dict keeping addtional statistics
-        self._stats = {}
+        self._stats = OrderedDict()
 
         # the actual confidence thresholds
         self._conf_thresholds = np.arange(
@@ -137,9 +138,9 @@ class Box3dEvaluator:
 
         self.gts = {}
         self.preds = {}
-        self._stats = {}
+        self._stats = OrderedDict()
         self.ap = {}
-        self.results = {}
+        self.results = OrderedDict()
 
     def checkCw(self):
         # type: (...) -> None
@@ -179,7 +180,7 @@ class Box3dEvaluator:
 
         logger.info("Found {} GT files.".format(len(gts)))
 
-        self._stats["GT_stats"] = {x: 0 for x in self.eval_params.labels_to_evaluate}
+        self._stats["GT_stats"] = OrderedDict((x, 0) for x in self.eval_params.labels_to_evaluate)
 
         for p in gts:
             gts_for_image = []
@@ -270,9 +271,8 @@ class Box3dEvaluator:
 
         # initialize empty data
         for s in self._conf_thresholds:
-            self._stats[s] = {
-                "data": {}
-            }
+            self._stats[s] = {}
+            self._stats[s]["data"] = {}
 
         logger.info("Evaluating images...")
         # calculate stats for each image
@@ -649,8 +649,8 @@ class Box3dEvaluator:
 
         for parameter_name, value_dict in parameter_depth_data.items():
             curr_mean = -1.
-            result_dict = {}
-            result_items = {}
+            result_dict = OrderedDict()
+            result_items = OrderedDict()
             result_auc = 0.
             num_items = 0
 
@@ -702,13 +702,12 @@ class Box3dEvaluator:
         for parameter in parameters:
             if parameter == "AP":
                 continue
-            self.results[parameter] = {
-                x: {
-                    "data": {},
-                    "items": {},
-                    "auc": 0.
-                } for x in self.eval_params.labels_to_evaluate
-            }
+            self.results[parameter] = OrderedDict()
+            for x in self.eval_params.labels_to_evaluate:
+                self.results[parameter][x] = OrderedDict()
+                self.results[parameter][x]["data"] = OrderedDict()
+                self.results[parameter][x]["items"] = OrderedDict()
+                self.results[parameter][x]["auc"] = 0.
 
         # calculate the statistics for each class
         for label in self.eval_params.labels_to_evaluate:
@@ -716,12 +715,11 @@ class Box3dEvaluator:
             working_data = self._stats[working_confidence]["data"]
 
             self._stats["working_data"] = {}
-            self._stats["working_data"][label] = {
-                "Center_Dist": {x: [] for x in self._depth_bins},
-                "Size_Similarity": {x: [] for x in self._depth_bins},
-                "OS_Yaw": {x: [] for x in self._depth_bins},
-                "OS_Pitch_Roll": {x: [] for x in self._depth_bins}
-            }
+            self._stats["working_data"][label] = OrderedDict()
+            self._stats["working_data"][label]["Center_Dist"] = OrderedDict((x, []) for x in self._depth_bins)
+            self._stats["working_data"][label]["Size_Similarity"] = OrderedDict((x, []) for x in self._depth_bins)
+            self._stats["working_data"][label]["OS_Yaw"] = OrderedDict((x, []) for x in self._depth_bins)
+            self._stats["working_data"][label]["OS_Pitch_Roll"] = OrderedDict((x, []) for x in self._depth_bins)
 
             # loop over all images
             for base_img, tp_fp_fn_data in working_data.items():
@@ -771,16 +769,15 @@ class Box3dEvaluator:
         if self.eval_params.matching_method == MATCHING_MODAL:
             modal_amodal_modifier = "Modal"
 
-        self.results["eval_params"] = {
-            "labels": self.eval_params.labels_to_evaluate,
-            "min_iou_to_match": self.eval_params.min_iou_to_match,
-            "max_depth": self.eval_params.max_depth,
-            "step_size": self.eval_params.step_size,
-            "matching_method": modal_amodal_modifier
-        }
+        self.results["eval_params"] = OrderedDict()
+        self.results["eval_params"]["labels"] = self.eval_params.labels_to_evaluate
+        self.results["eval_params"]["min_iou_to_match"] = self.eval_params.min_iou_to_match
+        self.results["eval_params"]["max_depth"] = self.eval_params.max_depth
+        self.results["eval_params"]["step_size"] = self.eval_params.step_size
+        self.results["eval_params"]["matching_method"] = modal_amodal_modifier
 
         # calculate detection scores and add them to results
-        self.results["Detection_Score"] = {}
+        self.results["Detection_Score"] = OrderedDict()
         logger.info("========================")
         logger.info("======= Results ========")
         logger.info("========================")
@@ -927,19 +924,18 @@ class Box3dEvaluator:
             }
 
         # dict containing data for AP and mAP
-        ap = {
-            x: {
-                "data": {},
-                "auc": 0.
-            } for x in self.eval_params.labels_to_evaluate
-        }
+        ap = OrderedDict()
+        for x in self.eval_params.labels_to_evaluate:
+            ap[x] = OrderedDict()
+            ap[x]["data"] = OrderedDict()
+            ap[x]["auc"] = 0.
 
-        ap_per_depth = {
-            x: {} for x in self.eval_params.labels_to_evaluate
-        }
+        ap_per_depth = OrderedDict(
+            (x, OrderedDict()) for x in self.eval_params.labels_to_evaluate
+        )
 
         # dict containing the working point for DDTP metrics
-        working_confidence = {x: 0 for x in self.eval_params.labels_to_evaluate}
+        working_confidence = OrderedDict((x, 0) for x in self.eval_params.labels_to_evaluate)
 
         # calculate standard AP per class
         for label in self.eval_params.labels_to_evaluate:
@@ -991,10 +987,9 @@ class Box3dEvaluator:
         # calculate depth dependent mAP
         for label in self.eval_params.labels_to_evaluate:
             for d in self._depth_bins:
-                tmp_dict = {
-                    "data": {},
-                    "auc": 0.
-                }
+                tmp_dict = OrderedDict()
+                tmp_dict["data"] = OrderedDict()
+                tmp_dict["auc"] = 0.
 
                 recalls_ = []
                 precisions_ = []
