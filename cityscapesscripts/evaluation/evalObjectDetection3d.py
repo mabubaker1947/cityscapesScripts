@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python
 #
 # The evaluation script for Cityscapes 3D object detection (https://arxiv.org/abs/2006.07864)
 # We use this script to evaluate your approach on the test set.
