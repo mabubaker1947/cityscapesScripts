@@ -44,7 +44,7 @@ from cityscapesscripts.evaluation.plot3dResults import (
 logger = logging.getLogger('EvalObjectDetection3d')
 logging.basicConfig(filename='eval.log',
                     filemode='w',
-                    format='%(asctime)s.%(msecs)d %(name)s %(levelname)s %(message)s',
+                    format='%(asctime)s.%(msecs)03d %(name)s %(levelname)s %(message)s',
                     datefmt='%H:%M:%S')
 coloredlogs.install(level='INFO')
 
@@ -102,8 +102,9 @@ class Box3dEvaluator:
 
     def __init__(
         self,
-        evaluation_params: EvaluationParameters
-    ) -> None:
+        evaluation_params       # type: EvaluationParameters
+        ):
+        # type: (...) -> None:
 
         self.eval_params = evaluation_params
 
@@ -130,7 +131,8 @@ class Box3dEvaluator:
         # the actual depth bins
         self._depth_bins = np.arange(0, self.eval_params.max_depth + 1, self.eval_params.step_size)
 
-    def reset(self) -> None:
+    def reset(self):
+        # type: (...) -> None
         """Resets state of this instance to a newly initialised one."""
 
         self.gts = {}
@@ -139,7 +141,8 @@ class Box3dEvaluator:
         self.ap = {}
         self.results = {}
 
-    def checkCw(self) -> None:
+    def checkCw(self):
+        # type: (...) -> None
         """Checks chosen working confidence value."""
         if (
             not self.eval_params.cw in self._conf_thresholds and
@@ -160,7 +163,11 @@ class Box3dEvaluator:
                 "{:.2f} is used as working confidence instead of {}.".format(self.eval_params.cw, old_cw)
             )
 
-    def loadGT(self, gt_folder: str) -> None:
+    def loadGT(
+        self,
+        gt_folder   # type: str
+        ):
+        # type: (...) -> None
         """Loads ground truth from the given folder.
 
         Args:
@@ -204,7 +211,11 @@ class Box3dEvaluator:
                 "ignores": ignores_for_image
             }
 
-    def loadPredictions(self, pred_folder: str) -> None:
+    def loadPredictions(
+        self,
+        pred_folder   # type: str
+        ):
+        # type: (...) -> None
         """Loads all predictions from the given folder.
 
         Args:
@@ -246,7 +257,8 @@ class Box3dEvaluator:
                 "objects": preds_for_image
             }
 
-    def evaluate(self) -> None:
+    def evaluate(self):
+        # type: (...) -> None
         """Main evaluation routine."""
 
         # fill up predictions dict with empty detections if prediction file not found
@@ -274,7 +286,11 @@ class Box3dEvaluator:
         # calculate TP stats (center dist, size similarity, orientation score)
         self._calcTpStats()
 
-    def saveResults(self, result_folder: str) -> str:
+    def saveResults(
+        self,
+        result_folder   # type: str
+        ):
+        # type: (...) -> str
         """Saves the evaluation results to ``"results.json"``
 
         Args:
@@ -295,7 +311,8 @@ class Box3dEvaluator:
 
         return result_file
 
-    def _calcImageStats(self) -> None:
+    def _calcImageStats(self):
+        # type: (...) -> None
         """Internal method that calculates Precision and Recall values for whole dataset."""
 
         # single threaded
@@ -310,7 +327,11 @@ class Box3dEvaluator:
                 for img_base, match_data in data.items():
                     self._stats[score]["data"][img_base] = match_data
 
-    def _worker(self, base: str) -> dict:
+    def _worker(
+        self,
+        base    # type: str
+        ):
+        # type: (...) -> dict
         """Internal method to run evaluation for a single image."""
         tmp_stats = {}
 
@@ -336,10 +357,12 @@ class Box3dEvaluator:
         return tmp_stats
 
     def _addImageEvaluation(
-            self,
-            gt_boxes: List[CsBbox3d],
-            pred_boxes: List[CsBbox3d],
-            min_score: float) -> Tuple[dict, dict, dict, dict]:
+        self,
+        gt_boxes,   # type: List[CsBbox3d]
+        pred_boxes, # type: List[CsBbox3d]
+        min_score   # type: float
+        ):
+        # type: (...) -> Tuple[dict, dict, dict, dict]
         """Internal method to evaluate a single image.
 
         Args:
@@ -450,8 +473,9 @@ class Box3dEvaluator:
 
     def _getMatches(
         self,
-        iou_matrix: np.ndarray
-    ) -> Tuple[List[int], List[int], List[int]]:
+        iou_matrix  # type: np.ndarray
+        ):
+        # type: (...) -> Tuple[List[int], List[int], List[int]]
         """Internal method that gets the TP matches between the predictions and the GT data.
 
         Args:
@@ -492,10 +516,11 @@ class Box3dEvaluator:
 
     def _calcCenterDistances(
         self,
-        label: str,
-        gt_boxes: List[CsBbox3d],
-        pred_boxes: List[CsBbox3d]
-    ) -> np.ndarray:
+        label,      # type: str
+        gt_boxes,   # type: List[CsBbox3d]
+        pred_boxes, # type: List[CsBbox3d]
+        ):
+        # type: (...) -> np.ndarray
         """Internal method that calculates the BEV distance for a TP box
         d = sqrt(dx*dx + dz*dz)
 
@@ -536,11 +561,12 @@ class Box3dEvaluator:
 
     def _calcSizeSimilarities(
         self,
-        label: str,
-        gt_boxes: List[CsBbox3d],
-        pred_boxes: List[CsBbox3d],
-        gt_dists: np.ndarray
-    ) -> None:
+        label,      # type: str
+        gt_boxes,   # type: List[CsBbox3d]
+        pred_boxes, # type: List[CsBbox3d]
+        gt_dists    # type: np.ndarray
+        ):
+        # type: (...) -> None
         """Internal method that calculates the size similarity for a TP box
         s = min(w/w', w'/w) * min(h/h', h'/h) * min(l/l', l'/l)
 
@@ -569,11 +595,12 @@ class Box3dEvaluator:
 
     def _calcOrientationSimilarities(
         self,
-        label: str,
-        gt_boxes: List[CsBbox3d],
-        pred_boxes: List[CsBbox3d],
-        gt_dists: np.ndarray
-    ) -> None:
+        label,      # type: str
+        gt_boxes,   # type: List[CsBbox3d]
+        pred_boxes, # type: List[CsBbox3d]
+        gt_dists    # type: np.ndarray
+        ):
+        # type: (...) -> None
         """Internal method that calculates the orientation similarity for a TP box.
         os_yaw = (1 + cos(delta)) / 2.
         os_pitch/roll = 0.5 + (cos(delta_pitch) + cos(delta_roll)) / 4.
@@ -607,7 +634,11 @@ class Box3dEvaluator:
             self._stats["working_data"][label]["OS_Pitch_Roll"][gt_dist].append(
                 os_pitch_roll)
 
-    def _calculateAUC(self, label: str) -> None:
+    def _calculateAUC(
+        self,
+        label   # type: str
+        ):
+        # type: (...) -> None
         """Internal method that calculates the Area Under Curve (AUC)
         for the available DDTP metrics.
 
@@ -654,7 +685,8 @@ class Box3dEvaluator:
             self.results[parameter_name][label]["auc"] = result_auc
             self.results[parameter_name][label]["items"] = result_items
 
-    def _calcTpStats(self) -> None:
+    def _calcTpStats(self):
+        # type (...) -> None
         """Internal method that calculates working point for each class and calculate TP stats.
 
         Calculated stats are:
@@ -777,7 +809,8 @@ class Box3dEvaluator:
             self.results["m" + parameter_name] = np.mean(
                 [x["auc"] for cat, x in self.results[parameter_name].items() if cat in accept_cats])
 
-    def _calculateAp(self) -> None:
+    def _calculateAp(self):
+        # type: (...) -> None
         """Internal method that calculates Average Precision (AP) values for the whole dataset."""
 
         for s in self._conf_thresholds:
@@ -1025,12 +1058,13 @@ class Box3dEvaluator:
 
 
 def evaluate3dObjectDetection(
-    gt_folder: str,
-    pred_folder: str,
-    result_folder: str,
-    eval_params: EvaluationParameters,
-    plot: bool = True
-) -> None:
+    gt_folder,      # type: str
+    pred_folder,    # type: str
+    result_folder,  # type: str
+    eval_params,    # type: EvaluationParameters
+    plot = True     # type: bool
+    ):
+    # type: (...) -> None
     """Performs the 3D object detection evaluation.
 
     Args:
@@ -1073,8 +1107,6 @@ def evaluate3dObjectDetection(
     return
 
 # main method
-
-
 def main():
     logger.info("========================")
     logger.info("=== Start evaluation ===")
@@ -1174,7 +1206,9 @@ def main():
 
     if resultFolder == "":
         resultFolder = args.predictionFolder
-    os.makedirs(resultFolder, exist_ok=True)
+    # keep python 2 compatibility
+    if not os.path.exists(resultFolder):
+        os.makedirs(resultFolder)
 
     # setup the evaluation parameters
     eval_params = EvaluationParameters(

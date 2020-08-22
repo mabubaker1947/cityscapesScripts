@@ -1,7 +1,10 @@
 import sys
 import os
 import json
-from typing import List
+from typing import (
+    List,
+    Tuple
+)
 import numpy as np
 
 import matplotlib.pyplot as plt
@@ -16,14 +19,15 @@ def csToMplColor(label):
 
 
 def create_table_row(
-    axis: Axes,
-    x_pos: float,
-    y_pos: float,
-    data_dict: dict,
-    title: str,
-    key: str,
-    subdict_key: str = None
-):
+    axis,               # type: Axes
+    x_pos,              # type: float
+    y_pos,              # type: float
+    data_dict,          # type: dict
+    title,              # type: str
+    key,                # type: str
+    subdict_key = None  # type: str
+    ):
+    # type: (...) -> None
     """Creates a row presenting scores for all classes in category ``key`` in ``data_dict``.
 
     Args:
@@ -55,14 +59,19 @@ def create_table_row(
               data_dict["m"+key], fontdict={'weight': 'bold'})
 
 
-def create_result_table_and_legend_plot(axis: Axes, data_to_plot: dict, handles_labels: tuple):
+def create_result_table_and_legend_plot(
+    axis,           # type: Axes
+    data_to_plot,   # type: dict
+    handles_labels  # type: Tuple[List, List]
+    ):
+    # type: (...) -> None
     """Creates the plot-section containing a table with result scores and labels.
 
     Args:
         axis (Axes): Axes-instances to use for the subplot
         data_to_plot (dict): Dictionary containing ``"Detection_Score"`` and ``"AP"``
             and corresponding mean values
-        handles_labels (tuple[List, List]): Tuple of matplotlib handles and corresponding labels
+        handles_labels (Tuple[List, List]): Tuple of matplotlib handles and corresponding labels
     """
 
     required_keys = ["Detection_Score", "mDetection_Score", "AP", "mAP"]
@@ -98,11 +107,12 @@ def create_result_table_and_legend_plot(axis: Axes, data_to_plot: dict, handles_
 
 
 def create_spider_chart_plot(
-    axis: Axes,
-    data_to_plot: dict,
-    categories: List[str],
-    accept_classes: List[str],
-):
+    axis,           # type: Axes
+    data_to_plot,   # type: dict
+    categories,     # type: List[str]
+    accept_classes  # type: List[str]
+    ):
+    # type: (...) -> None
     """Creates spider-chart with ``categories`` for all classes in ``accept_classes``.
 
     Args:
@@ -157,7 +167,13 @@ def create_spider_chart_plot(
     axis.legend(bbox_to_anchor=(0, 0))
 
 
-def create_AP_plot(axis: Axes, data_to_plot: dict, accept_classes: List[str], max_depth: int):
+def create_AP_plot(
+    axis,           # type: Axes
+    data_to_plot,   # type: dict
+    accept_classes, # type: List[str]
+    max_depth       # type: int
+    ):
+    # type: (...) -> None
     """Create the average precision (AP) subplot for classes in ``accept_classes``.
 
     Args:
@@ -184,7 +200,12 @@ def create_AP_plot(axis: Axes, data_to_plot: dict, accept_classes: List[str], ma
         fill_standard_subplot(axis, x_vals, y_vals, label, [], max_depth)
 
 
-def set_up_xaxis(axis: Axes, max_depth: int, num_ticks: int):
+def set_up_xaxis(
+    axis,       # type: Axes
+    max_depth,  # type: int
+    num_ticks   # type: int
+    ):
+    # type: (...) -> None
     """Sets up the x-Axis of given Axes-instance ``axis``.
 
     Args:
@@ -197,7 +218,12 @@ def set_up_xaxis(axis: Axes, max_depth: int, num_ticks: int):
     axis.set_xticklabels(["%.1f" % x for x in np.linspace(0, max_depth, num_ticks + 1)])
 
 
-def set_up_PR_plot_axis(axis: Axes, min_iou: float, matching_method: str):
+def set_up_PR_plot_axis(
+    axis,           # type: Axes
+    min_iou,        # type: float
+    matching_method # type: str
+    ):
+    # type: (...) -> None
     """Sets up the axis for the precision plot."""
     axis.set_title("PR Curve@%.2f (%s)" % (min_iou, matching_method))
     axis.set_xlabel("Recall")
@@ -208,7 +234,11 @@ def set_up_PR_plot_axis(axis: Axes, min_iou: float, matching_method: str):
     axis.set_xticklabels([x / 10. for x in range(11)])
 
 
-def create_all_axes(max_depth: int, num_ticks: int):
+def create_all_axes(
+    max_depth,  # type: int
+    num_ticks   # type: int
+    ):
+    # type: (...) -> None
     """Creates all Axes-instances of the 8 subplots.
 
     Args:
@@ -241,7 +271,12 @@ def create_all_axes(max_depth: int, num_ticks: int):
     return ax_results, ax_spider, axes
 
 
-def create_PR_plot(axis: Axes, data: dict, accept_classes: List[str]):
+def create_PR_plot(
+    axis,           # type: Axes
+    data,           # type: dict
+    accept_classes  # type: List[str]
+    ):
+    # type: (...) -> None
     """Fills precision-recall (PR) subplot with data and finalizes ``axis``-set-up.
 
     Args:
@@ -280,12 +315,13 @@ def create_PR_plot(axis: Axes, data: dict, accept_classes: List[str]):
 
 
 def fill_and_finalize_subplot(
-    category: str,
-    data_to_plot: dict,
-    accept_classes: List[str],
-    axis: Axes,
-    max_depth: int,
-):
+    category,           # type: str
+    data_to_plot,       # type: dict
+    accept_classes,     # type: List[str]
+    axis,               # type: Axes
+    max_depth           # type: int
+    ):
+    # type: (...) -> None
     """Plot data to subplots by selecting correct data for given ``category`` and looping over
     all classes in ``accept_classes``.
 
@@ -332,13 +368,14 @@ def fill_and_finalize_subplot(
 
 
 def fill_standard_subplot(
-    axis: Axes,
-    x_vals: List[float],
-    y_vals: List[float],
-    label: str,
-    available_items_scaling: List[float],
-    max_depth: int,
-):
+    axis,                       # type: Axes
+    x_vals,                     # type: List[float]
+    y_vals,                     # type: List[float]
+    label,                      # type: str
+    available_items_scaling,    # type: List[float]
+    max_depth                   # type: int
+    ):
+    # type: (...) -> None
     """Fills standard-subplots with data for ``label`` with data.
 
     Includes scatter-plot with size-scaled data-points, line-plot and
@@ -365,7 +402,11 @@ def fill_standard_subplot(
                   color=csToMplColor(label), linestyle="--", alpha=0.6)
 
 
-def get_available_items_scaling(data: dict, scale_fac: float = 100.):
+def get_available_items_scaling(
+    data,           # type: dict
+    scale_fac = 100 # type: float
+    ):
+    # type: (...) -> None
     """Counts available items per data-point. Normalizes and scales according to ``scale_fac``."""
     available_items = list(data.values())
     if len(available_items) == 0:
@@ -377,14 +418,20 @@ def get_available_items_scaling(data: dict, scale_fac: float = 100.):
     return available_items_scaling
 
 
-def get_x_y_vals(data: dict):
+def get_x_y_vals(
+    data    # type: dict
+    ):
+    # type: (...) -> None
     """Reads and returns x- and y-values from dict."""
     x_vals = [float(x) for x in list(data.keys())]
     y_vals = list(data.values())
     return x_vals, y_vals
 
 
-def plot_data(data_to_plot: dict):
+def plot_data(
+    data_to_plot    # type: dict
+    ):
+    # type: (...) -> None
     """Creates the visualization of the data in ``data_to_plot``.
 
     Args:
@@ -399,7 +446,7 @@ def plot_data(data_to_plot: dict):
     # setup all categories
     categories = ["AP", "Center_Dist", "Size_Similarity",
                   "OS_Yaw", "OS_Pitch_Roll"]
-    subplot_categories = ["PR", *categories]
+    subplot_categories = ["PR"] + categories
     assert all([key in data_to_plot.keys() for key in categories])
 
     accept_classes = []
@@ -430,7 +477,10 @@ def plot_data(data_to_plot: dict):
     plt.show()
 
 
-def prepare_data(json_path: str) -> dict:
+def prepare_data(
+    json_path   # type: str
+    ):
+    # type: (...) -> dict
     """Loads data from json-file.
 
     Args:

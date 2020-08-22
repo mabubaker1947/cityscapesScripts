@@ -321,6 +321,8 @@ class CsIgnore2d(CsObject):
         CsObject.__init__(self, CsObjectType.IGNORE2D)
 
         self.box_2d_xywh = []
+        self.label = ""
+        self.instanceId = -1
 
     def __str__(self):
         bbox2dText = ""
@@ -331,6 +333,20 @@ class CsIgnore2d(CsObject):
 
     def fromJsonText(self, jsonText, objId=-1):
         self.box_2d_xywh = jsonText['2d']
+
+        if ('label' in jsonText.keys()):
+            self.label = jsonText['label']
+
+        if ('instanceId' in jsonText.keys()):
+            self.instanceId = jsonText['instanceId']
+
+    def toJsonText(self):
+        objDict = {}
+        objDict['label'] = self.label
+        objDict['instanceId'] = self.instanceId
+        objDict['2d'] = self.box_2d_xywh
+
+        return objDict
 
     @property
     def box_2d(self):

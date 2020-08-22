@@ -28,14 +28,15 @@ class EvaluationParameters:
 
     def __init__(
         self,
-        labels_to_evaluate: List[str],
-        min_iou_to_match: float = 0.7,
-        max_depth: int = 100,
-        step_size: int = 5,
-        matching_method: int = MATCHING_AMODAL,
-        cw: float = -1.,
-        num_conf: int = 50
-    ) -> None:
+        labels_to_evaluate,                 # type: List[str]
+        min_iou_to_match = 0.7,             # type: float
+        max_depth = 100,                    # type: int
+        step_size = 5.,                     # type: float
+        matching_method = MATCHING_AMODAL,  # type: int
+        cw = -1.,                           # type: float
+        num_conf = 50                       # type: int
+        ):
+        # type: (...) -> None
 
         self._labels_to_evaluate = labels_to_evaluate
         self._min_iou_to_match = min_iou_to_match
@@ -79,9 +80,10 @@ class EvaluationParameters:
 
 
 def calcIouMatrix(
-    gts: np.ndarray,
-    preds: np.ndarray
-) -> np.ndarray:
+    gts,        # type: np.ndarray,
+    preds       # type: np.ndarray
+    ):
+    # type: (...) -> np.ndarray
     """Calculates the pairwise Intersection Over Union (IoU)
     matrix for a set of GTs and predictions.
 
@@ -110,9 +112,10 @@ def calcIouMatrix(
 
 
 def calcOverlapMatrix(
-    gt_ignores: np.ndarray,
-    preds: np.ndarray
-) -> np.ndarray:
+    gt_ignores,     # type: np.ndarray,
+    preds           # type: np.ndarray
+    ):
+    # type: (...) -> np.ndarray
     """Calculates the overlap matrix for a set
     of GT ignore regions and predictions.
 
@@ -140,9 +143,10 @@ def calcOverlapMatrix(
 
 
 def getFiles(
-    folder: str,
-    suffix: str = ".json"
-) -> List[str]:
+    folder,         # type: str,
+    suffix=".json"  # type: str
+        ):
+    # type: (...) -> List[str]
     """Recursively walks through the folder and finds
     returns all files that end with ``"suffix"``.
 
